@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.json.simple.JSONArray;
@@ -29,5 +30,13 @@ public class SaveParseTest extends BaseTest {
 		
 		assertEquals("t3_5qa6n3", after);
 		assertNull(before);
+		
+		Iterator<JSONObject> iterator = children.iterator();
+        while (iterator.hasNext()) {
+        	
+        	JSONObject child = iterator.next();
+        	JSONObject childData = (JSONObject)child.get("data");
+        	System.out.println((String)childData.get("subreddit"));
+        }
 	}
 }
