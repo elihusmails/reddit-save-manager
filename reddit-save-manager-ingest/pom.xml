@@ -13,7 +13,7 @@
 	<groupId>com.markwebb.reddit.save.manager.ingest</groupId>
 	<artifactId>reddit-save-manager-ingest</artifactId>
 	<name>reddit-save-manager-ingest</name>
-	<url>http://maven.apache.org</url>
+	<url>https://github.com/elihusmails/reddit-save-manager</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
