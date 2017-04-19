@@ -36,7 +36,8 @@ public class SaveParseTest extends BaseTest {
         	
         	JSONObject child = iterator.next();
         	JSONObject childData = (JSONObject)child.get("data");
-        	System.out.println((String)childData.get("subreddit"));
+        	//System.out.println((String)childData.get("subreddit"));
+        	System.out.println(childData);
         }
 	}
 }
