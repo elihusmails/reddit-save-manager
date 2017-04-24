@@ -6,11 +6,9 @@ import java.util.Scanner;
 
 import org.apache.http.client.ClientProtocolException;
 
-import com.markwebb.reddit.save.manager.ingest.mongo.MongoRedditDAO;
-
 public class MainTester {
 
-	public static void main(String[] args) throws ClientProtocolException, IOException {
+	public static void main(String[] args) throws ClientProtocolException, IOException, InterruptedException {
 
 		System.out.println("Enter your username: ");
 		Scanner scanner = new Scanner(System.in);
@@ -33,11 +31,18 @@ public class MainTester {
 		RedditOAuth oAuth = new RedditOAuth(clientId, clientSecret, username, new String(password));
 		
 		Reddit reddit = new Reddit();
-		String saves = reddit.getSaves(username, oAuth.getAccessToken());
-		System.out.println(saves);
+		GetSaveResult saves = reddit.getAllSaves(username, oAuth.getAccessToken());
+//		System.out.println(saves.getContent());
 		
-		MongoRedditDAO dao = new MongoRedditDAO("127.0.0.1", 27017);
-		dao.addSavedRecords(saves);
+		while( saves.isMoreData() ){
+			System.out.println("BEFORE: [" + saves.getFirstThing() + "], AFTER: [" + saves.getLastThing() + "]");
+//			MongoRedditDAO dao = new MongoRedditDAO("127.0.0.1", 27017);
+//			dao.addSavedRecords(saves.getContent());
+			
+			saves = reddit.getAllSaves(username, oAuth.getAccessToken(), saves.getFirstThing(), saves.getLastThing(), 100);
+			
+			Thread.sleep(10 * 1000 );
+		}
 		
 		scanner.close();
 	}

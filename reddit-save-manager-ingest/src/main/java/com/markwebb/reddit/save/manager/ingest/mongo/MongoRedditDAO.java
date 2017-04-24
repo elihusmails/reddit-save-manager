@@ -1,11 +1,7 @@
 package com.markwebb.reddit.save.manager.ingest.mongo;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.bson.Document;
 import org.json.simple.JSONArray;
@@ -13,7 +9,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import com.mongodb.MongoClient;
-import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
@@ -50,17 +45,5 @@ public class MongoRedditDAO {
 		
 		Document dbObject = Document.parse(json);
 		collection.insertOne(dbObject);
-	}
-	
-	public List<Document> getDocuments(){
-		
-		return new ArrayList<Document>();
-	}
-	
-	public List<String> getSubreddits(){
-		
-		DistinctIterable<String> subreddits = collection.distinct("subreddit", String.class);
-		return StreamSupport.stream(subreddits.spliterator(), false)
-                .collect(Collectors.toList());
 	}
 }

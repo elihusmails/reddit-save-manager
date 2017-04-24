@@ -68,23 +68,20 @@ public class RedditSaveManagerRestServer extends AbstractVerticle {
 
 		mongoClient.runCommand("aggregate", command, res -> {
 		  if (res.succeeded()) {
-			  System.out.println("RES: " + res.result());
-			  System.out.println("CLZ = " + res.result().getClass());
 			  JsonArray resArr = res.result().getJsonArray("result");
 			  for( int i=0; i<resArr.size(); i++ ){
 				  JsonObject obj = resArr.getJsonObject(i);
-				  System.out.println(obj);
+				  logger.debug(obj.toString());
 			  }
 			  
-				routingContext
+			  routingContext
 				.response()
 				.putHeader("content-type", "application/json")
-				.end(resArr.toString());
+				.end(resArr.encodePrettily());
 		  } else {
 			  res.cause().printStackTrace();
 		  }
 		});
-		
 	}
 	
 	private void getSubreddits(RoutingContext routingContext) {
@@ -104,7 +101,7 @@ public class RedditSaveManagerRestServer extends AbstractVerticle {
 			routingContext
 				.response()
 				.putHeader("content-type", "application/json")
-				.end(new JsonObject().put("subreddits", distinct.result()).toString());
+				.end(new JsonObject().put("subreddits", distinct.result()).encodePrettily());
 		});
 	}
 	

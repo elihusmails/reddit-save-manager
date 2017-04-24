@@ -1,7 +1,6 @@
 package com.markwebb.reddit.save.manager.ingest;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
@@ -11,28 +10,42 @@ import org.json.simple.JSONValue;
 
 public class Reddit extends RedditWorker {
 
-	public String getSaves(String username, String accessToken ) throws ClientProtocolException, IOException{
-		String content = internalWorker("https://oauth.reddit.com/user/" + username + "/saved", accessToken);
-		return content;
+	public GetSaveResult getAllSaves(String username, String accessToken ) throws ClientProtocolException, IOException {
+		return getAllSaves( username, accessToken, null, null, 100);
 	}
 	
-	public String getAllSaves(String username, String accessToken ) throws ClientProtocolException, IOException {
+	public GetSaveResult getAllSaves(String username, String accessToken, String after, String before, int limit ) throws ClientProtocolException, IOException {
 		
-		String content = internalWorker("https://oauth.reddit.com/user/" + username + "/saved?limit=100", accessToken);
+		if( limit < 25 )
+			limit = 25;		// This is the default as per the API -- https://www.reddit.com/dev/api#GET_user_{username}_saved
 		
+		StringBuffer url = new StringBuffer();
+		url.append("https://oauth.reddit.com/user/");
+		url.append(username);
+		url.append("/saved?limit=100");
+		if( after != null && before != null ){
+			url.append("&after=" + after);
+			url.append("&before=" + before);
+		}
+		
+		System.out.println("URL = " + url);
+		
+		String content = internalWorker(url.toString(), accessToken);
+//		System.out.println(content);
 		Map<?, ?> json = (Map<?, ?>) JSONValue.parse(content);
 		
 		JSONObject data = (JSONObject)json.get("data");
 		JSONArray children = (JSONArray)data.get("children");
 		
-		String before = ((String)data.get("before"));
-		String after = ((String)data.get("after")).toString();
+		String newBefore = ((String)data.get("before"));
+		String newAfter = ((String)data.get("after")).toString();
 		
-		Iterator<String> iterator = children.iterator();
-        while (iterator.hasNext()) {
-            System.out.println(iterator.next());
-        }
+//		Iterator<String> iterator = (Iterator<String>)children.iterator();
+//        while (iterator.hasNext()) {
+//            System.out.println(iterator.next());
+//        }
 		
-		return content;
+		System.out.println("Children length = " + children.size());
+		return new GetSaveResult(newBefore, newAfter, content, children.size(), (children.size() == limit));
 	}
 }
