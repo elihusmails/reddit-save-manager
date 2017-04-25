@@ -33,15 +33,16 @@ public class MainTester {
 		Reddit reddit = new Reddit();
 		GetSaveResult saves = reddit.getAllSaves(username, oAuth.getAccessToken());
 //		System.out.println(saves.getContent());
+		Thread.sleep(5 * 1000 );
 		
 		while( saves.isMoreData() ){
 			System.out.println("BEFORE: [" + saves.getFirstThing() + "], AFTER: [" + saves.getLastThing() + "]");
 //			MongoRedditDAO dao = new MongoRedditDAO("127.0.0.1", 27017);
 //			dao.addSavedRecords(saves.getContent());
 			
-			saves = reddit.getAllSaves(username, oAuth.getAccessToken(), saves.getFirstThing(), saves.getLastThing(), 100);
+			saves = reddit.getAllSaves(username, oAuth.getAccessToken(), saves.getLastThing(), saves.getFirstThing(), 100);
 			
-			Thread.sleep(10 * 1000 );
+			Thread.sleep(5 * 1000 );
 		}
 		
 		scanner.close();

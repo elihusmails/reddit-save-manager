@@ -23,9 +23,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RedditOAuth extends RedditWorker {
 
+	private static final Logger log = LoggerFactory.getLogger(RedditOAuth.class);
+	
 	private String clientId;
 	private String clientSecret;
 	private String username;
@@ -62,7 +66,6 @@ public class RedditOAuth extends RedditWorker {
             httppost.addHeader("User-Agent", "java:MyRedditCatalog:v1.0 by /u/elihusmails");
             httppost.setHeader("Accept","any;");
 
-
             HttpResponse response = httpclient.execute(httppost, context);
             HttpEntity entity = response.getEntity();
 
@@ -73,7 +76,7 @@ public class RedditOAuth extends RedditWorker {
                  while (null != (line = br.readLine())) {
                      content.append(line);
                  }
-                 System.out.println(content.toString());
+                 log.info(content.toString());
                  Map<?, ?> json = (Map<?, ?>) JSONValue.parse(content.toString());
                  if (json.containsKey("access_token")) {
                     return (String) (json.get("access_token"));
@@ -89,7 +92,7 @@ public class RedditOAuth extends RedditWorker {
 	@SuppressWarnings("rawtypes")
 	public String getUsername(String accessToken) throws ClientProtocolException, IOException {
 		String content = internalWorker("https://oauth.reddit.com/api/v1/me", accessToken);
-		System.out.println("Content::" + content);
+		log.info("Content::" + content);
 		Map json = (Map) JSONValue.parse(content);
 		if (json.containsKey("name")) {
 			return (String) (json.get("name"));
