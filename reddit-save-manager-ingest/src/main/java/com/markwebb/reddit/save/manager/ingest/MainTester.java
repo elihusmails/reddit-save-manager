@@ -1,12 +1,15 @@
 package com.markwebb.reddit.save.manager.ingest;
 
+import com.markwebb.reddit.save.manager.ingest.mongo.MongoRedditDAO;
+import org.apache.http.client.ClientProtocolException;
+
 import java.io.Console;
 import java.io.IOException;
 import java.util.Scanner;
 
-import org.apache.http.client.ClientProtocolException;
-
 public class MainTester {
+
+    private static final int QUERY_PAUSE_TIME = 10;
 
 	public static void main(String[] args) throws ClientProtocolException, IOException, InterruptedException {
 
@@ -33,16 +36,16 @@ public class MainTester {
 		Reddit reddit = new Reddit();
 		GetSaveResult saves = reddit.getAllSaves(username, oAuth.getAccessToken());
 //		System.out.println(saves.getContent());
-		Thread.sleep(5 * 1000 );
+		Thread.sleep(QUERY_PAUSE_TIME * 1000 );
 		
 		while( saves.isMoreData() ){
 			System.out.println("BEFORE: [" + saves.getFirstThing() + "], AFTER: [" + saves.getLastThing() + "]");
-//			MongoRedditDAO dao = new MongoRedditDAO("127.0.0.1", 27017);
-//			dao.addSavedRecords(saves.getContent());
+			MongoRedditDAO dao = new MongoRedditDAO("127.0.0.1", 27017);
+			dao.addSavedRecords(saves.getContent());
 			
 			saves = reddit.getAllSaves(username, oAuth.getAccessToken(), saves.getLastThing(), saves.getFirstThing(), 100);
 			
-			Thread.sleep(5 * 1000 );
+			Thread.sleep(QUERY_PAUSE_TIME * 1000 );
 		}
 		
 		scanner.close();

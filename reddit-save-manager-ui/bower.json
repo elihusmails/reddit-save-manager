@@ -1,0 +1,11 @@
+{
+  "name": "reddit-save-manager0ui",
+  "description": "Reddit Save Manager User Interface",
+  "version": "0.0.0",
+  "homepage": "https://github.com/angular/angular-seed",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "jquery":"3.2.1"
+  }
+}
