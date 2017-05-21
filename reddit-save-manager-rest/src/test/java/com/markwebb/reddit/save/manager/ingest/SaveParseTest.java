@@ -1,16 +1,17 @@
 package com.markwebb.reddit.save.manager.ingest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class SaveParseTest extends BaseTest {
 
@@ -23,7 +24,7 @@ public class SaveParseTest extends BaseTest {
 		
 		JSONObject data = (JSONObject)json.get("data");
 		JSONArray children = (JSONArray)data.get("children");
-		assertEquals(100, children.size());
+		Assert.assertEquals(100, children.size());
 		
 		String before = ((String)data.get("before"));
 		String after = ((String)data.get("after")).toString();
